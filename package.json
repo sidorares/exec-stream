@@ -1,0 +1,32 @@
+{ "name" : "exec_stream"
+, "author": "Andrey Sidorov <sidorares@yandex.ru>"
+, "description": "Create read-write pipeable stream from spawned process"
+, "keywords": ["child", "stawn", "stream"]
+, "homepage": "https://github.com/sidorares/exec-stream"
+, "version" : "0.0.1"
+, "maintainers" :
+  [ { "name": "Andrey Sidorov"
+    , "email": "sidoares@yandex.ru"
+    }
+  ]
+, "bugs" : { "url" : "http://github.com/sidorares/exec-stream/issues" }
+, "license" : "MIT"
+, "repositories" :
+  [ { "type" : "git"
+    , "url" : "http://github.com/sidorares/exec-stream"
+    }
+  ]
+, "main" : "index.js"
+, "directories" : {
+        "example" : "example",
+        "test" : "test"
+   }
+, "engines" : { "node" : "*" }
+, "devDependencies": {
+    "mocha": "*"
+  }
+, "scripts": {
+    "test": "mocha",
+    "prepublish" : "npm prune"
+  }
+}
