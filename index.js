@@ -42,7 +42,7 @@ module.exports = function(cmd, args) {
                self.pause();
        });
    
-       if (opts && opts.end === true)
+       if (!opts || (opts && opts.end === true) || (opts && typeof opts.end === 'undefined'))
            self.on('end', function() {
                dest.end();
            });
