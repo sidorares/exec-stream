@@ -14,7 +14,6 @@ module.exports = function(cmd, args) {
        self.paused = false;
    }
    child.stdout.on('data', function(data) {
-       console.log('emitting: ', data.toString());
        self.emit('data', data); // self.emit.bind(self, 'data') ???
    });
    child.on('exit', function(code, signal) {
@@ -24,7 +23,6 @@ module.exports = function(cmd, args) {
        //    console.log(code, signal);
    });
    self.write = function(data) {
-       console.log('write called: ', data.toString());
        return child.stdin.write(data);
    }
    child.stdin.on('drain', function() {
@@ -43,9 +41,12 @@ module.exports = function(cmd, args) {
            if (buffered)
                self.pause();
        });
-       self.on('end', function() {
-           dest.end();
-       });
+   
+       if (opts && opts.end === true)
+           self.on('end', function() {
+               dest.end();
+           });
+
        self.emit('pipe');
        return dest;
    };

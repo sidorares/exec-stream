@@ -3,7 +3,7 @@
 , "description": "Create read-write pipeable stream from spawned process"
 , "keywords": ["child", "stawn", "stream"]
 , "homepage": "https://github.com/sidorares/exec-stream"
-, "version" : "0.0.1"
+, "version" : "0.0.2"
 , "maintainers" :
   [ { "name": "Andrey Sidorov"
     , "email": "sidoares@yandex.ru"
