@@ -1,7 +1,7 @@
 { "name" : "exec_stream"
 , "author": "Andrey Sidorov <sidorares@yandex.ru>"
 , "description": "Create read-write pipeable stream from spawned process"
-, "keywords": ["child", "stawn", "stream"]
+, "keywords": ["child", "spawn", "stream"]
 , "homepage": "https://github.com/sidorares/exec-stream"
 , "version" : "0.0.2"
 , "maintainers" :
