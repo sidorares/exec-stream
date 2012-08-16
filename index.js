@@ -3,13 +3,20 @@ var EventEmitter = require('events').EventEmitter;
 module.exports = function(cmd, args) {
    var self = new EventEmitter;
    var child = spawn(cmd, args);
+   var pauserefcount = 0;
    self.pause = function() {
-       if (self.paused)
-           return;
+       pauserefcount++;
+       if (pauserefcount > 1)
+          return;
        child.kill('SIGTSTP');
        self.paused = true;
    };
    self.resume = function() {
+       pauserefcount--;
+       if (pauserefcount>0)
+         return;
+       if (pauserefcount<0)
+         throw new Error('resume() is called without calling pause()');
        child.kill('SIGCONT');
        self.paused = false;
    }
