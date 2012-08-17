@@ -44,7 +44,7 @@ module.exports = function(cmd, args) {
                self.resume();
        });
        self.on('data', function(data) {
-           var buffered = dest.write(data);
+           var buffered = !dest.write(data);
            if (buffered)
                self.pause();
        });
