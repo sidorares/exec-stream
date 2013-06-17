@@ -1,9 +1,11 @@
 var spawn = require('child_process').spawn;
 var EventEmitter = require('events').EventEmitter;
 module.exports = function(cmd, args) {
-   var self = new EventEmitter;
+   var self = new EventEmitter();
    var child = spawn(cmd, args);
    var pauserefcount = 0;
+   child.stdin.resume();
+   child.stdout.resume();
    self.pause = function() {
        pauserefcount++;
        if (pauserefcount > 1)
@@ -12,6 +14,7 @@ module.exports = function(cmd, args) {
        self.paused = true;
    };
    self.resume = function() {
+    console.log(cmd + '.resume');
        pauserefcount--;
        if (pauserefcount>0)
          return;
@@ -19,8 +22,9 @@ module.exports = function(cmd, args) {
          throw new Error('resume() is called without calling pause()');
        child.kill('SIGCONT');
        self.paused = false;
-   }
+   };
    child.stdout.on('data', function(data) {
+       console.log(cmd + '.data', data);
        self.emit('data', data); // self.emit.bind(self, 'data') ???
    });
    child.on('exit', function(code, signal) {
@@ -30,13 +34,14 @@ module.exports = function(cmd, args) {
        //    console.log(code, signal);
    });
    self.write = function(data) {
+       console.log(cmd + '.write', data);
        return child.stdin.write(data);
-   }
+   };
    child.stdin.on('drain', function() {
        self.emit('drain');
    });
    self.end = function() {
-       child.kill('SIGKILL');
+       child.kill('SIGINT');
    };
    self.pipe = function(dest, opts) {
        dest.on('drain', function() {
@@ -45,10 +50,10 @@ module.exports = function(cmd, args) {
        });
        self.on('data', function(data) {
            var buffered = !dest.write(data);
-           if (buffered)
+           if (buffered & !self.paused)
                self.pause();
        });
-   
+
        if (!opts || (opts && opts.end === true) || (opts && typeof opts.end === 'undefined'))
            self.on('end', function() {
                dest.end();
@@ -58,4 +63,4 @@ module.exports = function(cmd, args) {
        return dest;
    };
    return self;
-}
+};
