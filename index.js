@@ -4,8 +4,14 @@ module.exports = function(cmd, args) {
    var self = new EventEmitter();
    var child = spawn(cmd, args);
    var pauserefcount = 0;
+   var error = false;
    child.stdin.resume();
    child.stdout.resume();
+
+   setImmediate(function() {
+       if(! error)
+           self.emit("connect");
+   });
    self.pause = function() {
        pauserefcount++;
        if (pauserefcount > 1)
@@ -32,6 +38,10 @@ module.exports = function(cmd, args) {
            self.emit('end');
        //else
        //    console.log(code, signal);
+   });
+   child.on("error", function(err) {
+       error = true;
+       self.emit("error", err);
    });
    self.write = function(data) {
        console.log(cmd + '.write', data);
